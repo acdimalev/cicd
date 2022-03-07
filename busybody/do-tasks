@@ -1,0 +1,22 @@
+#!/bin/sh
+set -e
+
+run_path=$PWD
+task_path=$PWD/tasks
+
+cd "$task_path"
+for task in *; do
+  test -e $task/bell \
+  && bell="$(stat -c %Y $task/bell)" \
+  || bell=0 \
+  ;
+  test -e $task/serviced \
+  && serviced="$(stat -c %Y $task/serviced)" \
+  || serviced=0 \
+  ;
+  if test "$serviced" -lt "$bell"; then
+    test -x $task/run || continue
+    (cd "$run_path" && "$task_path"/$task/run)
+    touch -d @"$bell" $task/serviced
+  fi
+done

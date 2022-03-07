@@ -1,0 +1,25 @@
+#!/bin/sh
+set -e
+
+watch_path=$PWD/watch/git
+task_path=$PWD/tasks
+
+cd "$watch_path"
+for task in *; do
+  test -e $task/repo || continue
+  repo="$(cat $task/repo)"
+  test -e $task/branch \
+  && branch="$(cat $task/branch)" \
+  || branch=master \
+  ;
+  test -e $task/last-commit \
+  && last_commit="$(cat $task/last-commit)" \
+  || last_commit='' \
+  ;
+  # TODO: error reporting
+  commit="$(git ls-remote -h "$repo" "$branch" | cut -f1)"
+  if test "$last_commit" != "$commit"; then
+    touch "$task_path"/$task/bell
+    printf %s\\n "$commit" > $task/last-commit
+  fi
+done

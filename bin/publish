@@ -1,0 +1,16 @@
+#!/bin/sh
+set -e
+
+: ${BUILD:?build variable must be set}
+
+artifact=$1
+host=$2
+
+scp ~/artifacts/$artifact.$BUILD.tgz root@$host:artifacts/
+ssh root@$host << EOD
+  set -e
+  mkdir -p /srv/$artifact/$BUILD
+  tar xzf ~/artifacts/$artifact.$BUILD.tgz \
+    -C /srv/$artifact/$BUILD --strip-components=1
+  ln -nfs $BUILD /srv/$artifact/current
+EOD

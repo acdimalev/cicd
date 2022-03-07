@@ -1,0 +1,10 @@
+#!/bin/sh
+set -e
+
+: ${BUILD:?build variable must be set}
+
+artifact=$1
+
+tar czf $artifact.tgz $artifact
+mv $artifact.tgz ~/artifacts/$artifact.$BUILD.tgz
+ln -sf $artifact.$BUILD.tgz ~/artifacts/$artifact.tgz

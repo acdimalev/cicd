@@ -1,0 +1,44 @@
+#!/bin/sh
+set -e
+
+bench_path="$PWD"/bench
+log_path="$PWD"/logs
+
+case $# in
+  3) {
+    task=$1
+    repo="$2"
+    branch="$3"
+  } ;;
+  2) {
+    task=$1
+    repo="$2"
+    branch=master
+  } ;;
+  *) false ;;
+esac
+
+export BUILD=$(date +%s)
+
+logs="$log_path"/$task/$BUILD
+mkdir -p -- "$logs"
+exec <&- 1> "$logs"/out 2> "$logs"/err
+( set -e
+
+  # make a fresh repo clone
+  mkdir -p -- "$bench_path"
+  cd -- "$bench_path"
+  rm -rf $task
+  git archive --prefix=$task/ --remote="$repo" "$branch" | tar x
+  cd $task
+
+  # run through the automation steps
+  # signalling and notification could be added here
+  for step in $(ls automation); do
+    logs="$log_path"/$task/$BUILD/$step
+    mkdir -p -- "$logs"
+    automation/$step <&- 1> "$logs"/out 2> "$logs"/err
+  done
+) && mv -- "$log_path"/$task/$BUILD "$log_path"/$task/$BUILD-success \
+  || mv -- "$log_path"/$task/$BUILD "$log_path"/$task/$BUILD-failure \
+  ;

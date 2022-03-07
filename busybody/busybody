@@ -1,0 +1,10 @@
+#!/bin/sh
+
+here="$(dirname -- $0)"
+export PATH="$here":"$PATH"
+
+while true; do
+  watch-git
+  do-tasks
+  micronap
+done
