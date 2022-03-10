@@ -11,6 +11,13 @@ ssh root@$host << EOD
   set -e
   mkdir -p /srv/$artifact/$BUILD
   tar xzf ~/artifacts/$artifact.$BUILD.tgz \
-    -C /srv/$artifact/$BUILD --strip-components=1
+    -C /srv/$artifact/$BUILD --strip-components=1 \
+    --no-same-owner --no-same-permissions
+  if test -x /srv/$artifact/pre-link; then
+    ( cd /srv/$artifact/$BUILD && /srv/$artifact/pre-link )
+  fi
   ln -nfs $BUILD /srv/$artifact/current
+  if test -x /srv/$artifact/post-link; then
+    ( cd /srv/$artifact/current && /srv/$artifact/post-link )
+  fi
 EOD
