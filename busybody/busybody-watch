@@ -1,0 +1,16 @@
+#!/bin/sh
+set -e
+
+watch_path=$PWD/watch
+task_path=$PWD/tasks
+
+cd "$watch_path"
+for task in *; do
+  test -x $task/run || continue
+  last="$(cat $task/last 2>&-)" || last=
+  current="$($task/run 2> $task/err)" || continue
+  if test "$last" != "$current"; then
+    touch "$task_path"/$task/bell || continue
+    printf %s\\n "$current" > $task/last
+  fi
+done

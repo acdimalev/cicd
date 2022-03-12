@@ -1,0 +1,2 @@
+#!/bin/sh
+ip -j -6 addr sh scope global | jq -r '.[].addr_info[].local | values'

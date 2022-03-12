@@ -1,0 +1,18 @@
+#!/bin/sh
+set -e
+
+repo="$1"
+branch="$2"
+: ${branch:=master}
+
+references="$(git ls-remote -h "$repo" "$branch")"
+if test -z "$references"; then
+  printf "Branch does not exist in remote repository.\n" 1>&2
+  false
+fi
+if test 1 -ne "$(printf %s\\n "$references" | wc -l)"; then
+  printf "Multiple matching branches found:\n\n" 1>&2
+  printf %s\\n "$references" | cut -f2 1>&2
+  false
+fi
+printf %s\\n "$references" | cut -f1

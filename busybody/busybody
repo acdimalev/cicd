@@ -6,7 +6,8 @@ export PATH="$here":"$PATH"
 printf %s "$(id -un)" > /proc/self/comm
 
 while true; do
-  busybody-watch-git
+  busybody-watch-git # deprecated
+  busybody-watch
   busybody-tasks
   busybody-micronap
 done
