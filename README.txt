@@ -31,6 +31,7 @@ CICD Tools
 
 
 Busy Body
+---------
 
     bench/
       $task/
@@ -38,15 +39,27 @@ Busy Body
     logs/
       $task/
 
-    tasks/
-      $task/
-        bell
-        run
-        serviced
-
     watch/
       git/
         $task/
           branch
           last-commit
           repo
+
+
+Tasks
+
+    tasks/$task/
+      bell
+      run
+      serviced
+
+A `task' has a `run'-script to be executed whenever its `bell' is "rung".  There is also a last-`serviced' time to keep track of executions.
+
+Queueing up an execution is as simple at `touch`ing the `bell`.
+
+    touch tasks/$task/bell
+
+The last-`serviced` time can be manually checked with `stat`.
+
+    stat -c %y tasks/$task/serviced
