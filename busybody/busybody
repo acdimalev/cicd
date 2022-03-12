@@ -1,6 +1,6 @@
 #!/bin/sh
 
-here="$(dirname -- $0)"
+here="$(realpath -- "$(dirname -- $0)")"
 export PATH="$here":"$PATH"
 
 printf %s "$(id -un)" > /proc/self/comm
