@@ -1,0 +1,7 @@
+what am I avoiding?
+
+- automation outside of repositories / otherwise undocumented
+- no reasonable manual way to perform automation
+- excessively inefficient software (well outside my financial budget)
+- mountains of dependencies to investigate and troubleshoot (well outside my time budget)
+- inconsistent mechanisms for automatically and manually scheduling work
