@@ -1,5 +1,6 @@
 cicd_binaries = archive latest publish
-busybody_binaries = busybody do-git-automation do-tasks micronap watch-git
+busybody_binaries = busybody busybody-micronap busybody-tasks busybody-watch busybody-watch-git do-git-automation watch-git watch-ipv6-address
+
 
 prefix = /usr/local
 exec_prefix = $(prefix)
